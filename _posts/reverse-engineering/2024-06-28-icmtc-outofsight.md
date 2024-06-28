@@ -12,26 +12,26 @@ toc: true
 
 # **ICMTC CTF 2024**
 ## **Out of Sight**
-### General information:
+## General information:
 
 >Type :  ELF     
 CPU :  64-bit      
 Subsystem :  Console      
 Packing :   NO
 
-### Running the binary:
+## Running the binary:
 First, Let's run the program:
 
 ![alt text](/assets/images/reverse-engineering/ICMTC/runinng_the_program.png)
 
-### Static Analysis:
+## Static Analysis:
 Now, let's go to our previous printed string `Enter The Vault Password Key:`, We can see a called to `sub_565FFA2C942D`  with our input as parameter which looks like encoding method, then a compare between 2 strings, if they are identical we get our flag, otherwise we get "*Access Denied*"
 
 ![alt text](/assets/images/reverse-engineering/ICMTC/Static-1.png)
 
-Now, let's open a remote debbuger in IDA to see what is happening.
+Now, let's open a remote debugger in IDA to see what is happening.
 
-### Dynamic Analysis:
+## Dynamic Analysis:
 
 First, we should notice that there is an anti-debugging technique at the beginning, we could just patch this jump to force it to jump to our `loc_5D49C99119B5` always.
 
@@ -39,13 +39,13 @@ First, we should notice that there is an anti-debugging technique at the beginni
 
 Now we run our program and insert `input` as our input, we can see that the `_strcmp` is comparing our encoded input with `lvu_krr_uw_blhg`.
 
-![alt text]/assets/images/reverse-engineering/ICMTC/(hex_view.png)
+![alt text](/assets/images/reverse-engineering/ICMTC/hex_view.png)
 
-Now let's have a look in how `sub_565FFA2C942D` encodes our input, 
+Now let's have a look in how `sub_565FFA2C942D` encodes our input.
 
 **Encoding Process**:
 
-   - Loop over each character in `a1` (up to `v14` length).
+   - Loop over each character in `a1` (which contains our input) up to `v14` length.
    - If the character is alphabetical, it performs a shift:
         - If uppercase, it converts it to the range 0-25 (A-Z), applies the key shift, and converts back to uppercase.
         - If lowercase, it does similarly but for the lowercase range (a-z).
@@ -83,7 +83,7 @@ So the `_` does a shift left by 2 alphabetical characters which is the same effe
 
 
 
-### Cyber Chief:
+## Cyber Chief:
 
 Now as we got our key and we know the ciphertext must equal `lvu_krr_uw_blhg`, we can use cyber chief decoder to get our input.
 
